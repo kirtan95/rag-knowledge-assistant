@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# model cache (sentence-transformers / HF)
+.hf_cache/
+
+# Docker volumes
+pgdata/
+
+# OS
+.DS_Store

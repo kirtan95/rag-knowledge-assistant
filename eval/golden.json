@@ -1,0 +1,62 @@
+[
+  {
+    "answer": "An ingest path (upload -> extract -> chunk -> embed -> store) and a query path (embed question -> retrieve top-k -> answer).",
+    "id": "q01",
+    "question": "What are the two paths through the system?",
+    "source_doc": "01-architecture.md"
+  },
+  {
+    "answer": ".txt, .md and .pdf files.",
+    "id": "q02",
+    "question": "Which file types can be uploaded to /ingest?",
+    "source_doc": "01-architecture.md"
+  },
+  {
+    "answer": "Embeddings from different models live in different vector spaces and cannot be compared.",
+    "id": "q03",
+    "question": "Why must the query be embedded with the same model used at ingest?",
+    "source_doc": "01-architecture.md"
+  },
+  {
+    "answer": "500 tokens with 50 overlap. 500 tokens (~350-400 words) holds a complete thought while keeping the embedding focused on one idea; 50 tokens of overlap protects facts that straddle a boundary.",
+    "id": "q04",
+    "question": "What are the default chunk size and overlap, and why 500 tokens?",
+    "source_doc": "02-chunking-strategy.md"
+  },
+  {
+    "answer": "Because embedding models and LLMs think in tokens; token budgets are stable across content while character budgets vary by language and density.",
+    "id": "q05",
+    "question": "Why does the chunker count tokens instead of characters?",
+    "source_doc": "02-chunking-strategy.md"
+  },
+  {
+    "answer": "The chunker falls back to whitespace word counts so the pipeline keeps working in minimal or offline environments.",
+    "id": "q06",
+    "question": "What happens if tiktoken is not installed?",
+    "source_doc": "02-chunking-strategy.md"
+  },
+  {
+    "answer": "Speed/size/quality tradeoff: 80MB and 22M params, thousands of sentences/sec on CPU, competitive retrieval quality, and 384-dim vectors that keep the pgvector index small and fast.",
+    "id": "q07",
+    "question": "Why was all-MiniLM-L6-v2 chosen as the embedding model?",
+    "source_doc": "03-embeddings-and-retrieval.md"
+  },
+  {
+    "answer": "One source of truth, one backup story, and transactional consistency between chunk text and its embedding. A dedicated vector DB is worth it past ~1M vectors or for ANN features Postgres lacks.",
+    "id": "q08",
+    "question": "Why store vectors in Postgres with pgvector instead of a separate vector database?",
+    "source_doc": "03-embeddings-and-retrieval.md"
+  },
+  {
+    "answer": "docker compose up --build, then curl -F \"file=@data/sample_docs/01-architecture.md\" http://localhost:8000/ingest",
+    "id": "q09",
+    "question": "How do I start the whole stack and ingest a sample doc?",
+    "source_doc": "04-deployment-and-eval.md"
+  },
+  {
+    "answer": "Hit-rate@k is the fraction of questions with at least one top-k chunk from the gold document; MRR averages 1/rank of the first gold chunk. Both measure the retriever (chunking + embeddings), not the generator.",
+    "id": "q10",
+    "question": "What do hit-rate@k and MRR measure in the eval?",
+    "source_doc": "04-deployment-and-eval.md"
+  }
+]

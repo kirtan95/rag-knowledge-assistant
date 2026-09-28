@@ -1,0 +1,33 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: ragpassword
+      POSTGRES_DB: ragdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag -d ragdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://rag:ragpassword@db:5432/ragdb
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-4-5}
+      CHUNK_SIZE: ${CHUNK_SIZE:-500}
+      CHUNK_OVERLAP: ${CHUNK_OVERLAP:-50}
+      TOP_K: ${TOP_K:-5}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
